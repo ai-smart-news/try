@@ -1,10 +1,10 @@
 name: IG Poster
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # 允許手動觸發
   schedule:
-    # 台北時間 09:00（UTC = TPE-8）
-    - cron: "0 1 * * *"
+    # 每 15 分鐘執行一次（UTC 時間）
+    - cron: "*/15 * * * *"
 
 permissions:
   contents: write
