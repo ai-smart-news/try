@@ -108,7 +108,16 @@ def main():
     image_url = build_image_url(filename)
 
     # 3) 發文（目前是 stub）
-    ig_publish(image_url=image_url, caption=prompt)
+    ig_publish(
+        image_url=image_url,
+        original_prompt=prompt,   # 交給 ig_publish 生成文案 + hashtags
+        # 可選參數：
+        # is_carousel_item=False,
+        # alt_text="替代文字",
+        # location_id="",
+        # user_tags=[{"username":"someone","x":0.5,"y":0.5}],
+        # product_tags=[{"product_id":"123","x":0.5,"y":0.5}],
+    )
 
     # 4) 紀錄到本 repo
     append_posted(date_s, filename)
