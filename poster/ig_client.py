@@ -43,7 +43,7 @@ def _gen_caption_with_g4f(image_prompt: str) -> str:
     prompt_template = f"""
 請根據以下圖片描述，幫我生成一段簡短的 IG 發文文字（10~25字內），
 語氣自然、有意境，
-並在文末加上大量 hashtag（# 開頭、用空格分隔）。
+並在文末加上最多30個 hashtag（# 開頭、用空格分隔）。
 
 圖片描述：
 {cleaned}
