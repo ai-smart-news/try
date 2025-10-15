@@ -5,11 +5,20 @@ import time
 import requests
 from typing import List, Dict, Optional
 
-# === 強烈建議用 GitHub Secrets 設定 ===
-# 在 GitHub Actions 中於 "Repository settings > Secrets and variables > Actions"
-# 新增 IG_USER_ID, IG_ACCESS_TOKEN
-IG_USER_ID = 17841448468811237
-ACCESS_TOKEN = "EAAgtqNK7Q8MBPiWeVckfyiLvG7E2c1O8gk9jGn12RYzFM9HYYuXFDGJ84DFKQqHwhFRbyNkjk5BnQJ5tPC1ms0BJKMw8nkqtaHxP2SBKeKoOEGBnmONJVmFwbQSf7yf8VQ7j7nmYZBdOLZBgKzhkxxvZCShVWBb9sBiDFNyKieeh57H6dtzVbX5GM1LKLfX"
+# 如果這些環境變數不存在，程式會拋出錯誤，提醒你去設定。
+IG_USER_ID = os.getenv("IG_USER_ID")
+ACCESS_TOKEN = os.getenv("IG_ACCESS_TOKEN")
+
+if not IG_USER_ID:
+    raise RuntimeError("環境變數 IG_USER_ID 未設定。請確認已在 GitHub Secrets 或其他環境中設定。")
+if not ACCESS_TOKEN:
+    raise RuntimeError("環境變數 IG_ACCESS_TOKEN 未設定。請確認已在 GitHub Secrets 或其他環境中設定。")
+
+# 將 IG_USER_ID 轉換為 int，因為它預期是數字
+try:
+    IG_USER_ID = int(IG_USER_ID)
+except ValueError:
+    raise ValueError("環境變數 IG_USER_ID 必須是一個有效的數字。")
 
 # 可選：預設參數（也可在呼叫時覆蓋）
 DEFAULT_ALT_TEXT = os.getenv("IG_ALT_TEXT", "AI generated artwork")
