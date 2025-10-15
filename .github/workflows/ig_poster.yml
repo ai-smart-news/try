@@ -32,6 +32,13 @@ jobs:
       - name: Run poster
         run: |
           python poster/main.py
+        env:
+          # 將 GitHub Secrets 傳遞為環境變數
+          # 這裡的名稱 (IG_USER_ID, IG_ACCESS_TOKEN) 必須與 Python 程式碼中 os.getenv() 的參數一致
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          # 如果你有用到其他的預設參數，例如 ALT_TEXT，也可以在這裡設定
+          # IG_ALT_TEXT: "我的自定義預設替代文字"
 
       - name: Commit & push history updates (if any)
         run: |
