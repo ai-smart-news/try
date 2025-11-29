@@ -60,7 +60,7 @@ def _gen_caption_with_g4f(image_prompt: str) -> str:
     client = Client_g4f()
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gemma-3-27b-it",
             messages=[{"role": "user", "content": prompt_template}],
         )
         caption = response.choices[0].message.content.strip()
