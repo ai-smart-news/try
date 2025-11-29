@@ -41,6 +41,7 @@ def _gen_caption_with_g4f(image_prompt: str) -> str:
     若 g4f 不可用，回退為簡單截斷的 prompt。
     """
     cleaned = (image_prompt or "").strip()
+    cleaned = cleaned.replace(cleaned.split('.')[-1], '')
     if not cleaned:
         return ""
 
