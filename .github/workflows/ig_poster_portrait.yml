@@ -1,0 +1,53 @@
+name: IG Poster - Portrait
+
+on:
+  workflow_dispatch:   # 允許手動觸發
+  schedule:
+    # 每 15 分鐘執行一次（UTC 時間）
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run poster
+        run: |
+          python poster/main_portrait.py
+        env:
+          # 將 GitHub Secrets 傳遞為環境變數
+          # 這裡的名稱 (IG_USER_ID, IG_ACCESS_TOKEN) 必須與 Python 程式碼中 os.getenv() 的參數一致
+          IG_USER_ID_PORTRAIT: ${{ secrets.IG_USER_ID_PORTRAIT }}
+          IG_ACCESS_TOKEN_PORTRAIT: ${{ secrets.IG_ACCESS_TOKEN_PORTRAIT }}
+          # 如果你有用到其他的預設參數，例如 ALT_TEXT，也可以在這裡設定
+          # IG_ALT_TEXT: "我的自定義預設替代文字"
+
+      - name: Commit & push history updates (if any)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add history_portrait
+            git commit -m "chore(history): update posted records [skip ci]"
+            git push
+          else
+            echo "No changes to commit."
+          fi
