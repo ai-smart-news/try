@@ -28,11 +28,11 @@ DEFAULT_USER_TAGS_JSON = os.getenv("IG_USER_TAGS_JSON", "")  # e.g. '[{"username
 DEFAULT_PRODUCT_TAGS_JSON = os.getenv("IG_PRODUCT_TAGS_JSON", "")
 
 # === g4f ===
-try:
-    from g4f.client import Client as Client_g4f
-    _g4f_available = True
-except Exception:
-    _g4f_available = False
+# try:
+#     from g4f.client import Client as Client_g4f
+#     _g4f_available = True
+# except Exception:
+#     _g4f_available = False
 
 
 def _gen_caption_with_g4f(image_prompt: str) -> str:
@@ -45,10 +45,10 @@ def _gen_caption_with_g4f(image_prompt: str) -> str:
     if not cleaned:
         return ""
 
-    if not _g4f_available:
-        # 後備方案：取 20~30 字左右並加幾個通用 hashtag
-        short = (cleaned[:28] + "…") if len(cleaned) > 30 else cleaned
-        return f"{short}\n#art #aiart #digitalart #illustration #creative #visualart #artwork #instaart #design"
+    # if not _g4f_available:
+    #     # 後備方案：取 20~30 字左右並加幾個通用 hashtag
+    #     short = (cleaned[:28] + "…") if len(cleaned) > 30 else cleaned
+    #     return f"{short}\n#art #aiart #digitalart #illustration #creative #visualart #artwork #instaart #design"
 
     prompt_template = f"""
 請根據以下圖片描述，幫我生成一段簡短的 IG 發文文字（10~25字內），
@@ -58,13 +58,34 @@ def _gen_caption_with_g4f(image_prompt: str) -> str:
 圖片描述：
 {cleaned}
 """
-    client = Client_g4f()
+    # client = Client_g4f()
+    
+    from openai import OpenAI
+    
+    NV_KEY = os.getenv("NV_KEY")
+
+    client_openai = OpenAI(
+      base_url = "https://integrate.api.nvidia.com/v1",
+      api_key = NV_KEY
+    )
+    
     try:
-        response = client.chat.completions.create(
-            model="gemma-3-27b-it",
-            messages=[{"role": "user", "content": prompt_template}],
+        completion = client_openai.chat.completions.create(
+          model="z-ai/glm4.7",
+          messages=[{"role":"user","content":prompt_template}],
+          temperature=1,
+          top_p=1,
+          max_tokens=16384,
+          extra_body={"chat_template_kwargs":{"enable_thinking":False,"clear_thinking":False}},
+          stream=False
         )
-        caption = response.choices[0].message.content.strip()
+
+        # response = client.chat.completions.create(
+        #     model="gemma-3-27b-it",
+        #     messages=[{"role": "user", "content": prompt_template}],
+        # )
+        
+        caption = completion.choices[0].message.content.strip()
         return caption
     except Exception as e:
         print("[g4f] 生成文案失敗，改用後備方案：", e)
