@@ -37,6 +37,7 @@ jobs:
           # 這裡的名稱 (IG_USER_ID, IG_ACCESS_TOKEN) 必須與 Python 程式碼中 os.getenv() 的參數一致
           IG_USER_ID_PORTRAIT: ${{ secrets.IG_USER_ID_PORTRAIT }}
           IG_ACCESS_TOKEN_PORTRAIT: ${{ secrets.IG_ACCESS_TOKEN_PORTRAIT }}
+          NV_KEY: ${{ secrets.NV_KEY }}
           # 如果你有用到其他的預設參數，例如 ALT_TEXT，也可以在這裡設定
           # IG_ALT_TEXT: "我的自定義預設替代文字"
 
